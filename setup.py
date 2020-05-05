@@ -5,15 +5,16 @@ PY2 = sys.version_info[0] == 2
 PY26 = PY2 and sys.version_info[1] < 7
 
 NAME = 'sphinxcontrib-excel-table'
-AUTHOR = 'Guangyu Suo'
-VERSION = '1.0.8'
-EMAIL = 'yugsuo@gmail.com'
+AUTHOR = 'Guangyu Suo*, Larry Babb'
+VERSION = '1.0.8.1'
+EMAIL = 'yugsuo@gmail.com*, larry.babb@gmail.com'
 LICENSE = 'Apache License'
 DESCRIPTION = (
-    'Embed excel file as an excel-alike table into sphinx documentation.' +
+    'Embed excel file as an excel-alike table into sphinx documentation.* Forked with extended support for html in columns.' +
     ''
 )
-URL = 'https://github.com/hackerain/sphinxcontrib-excel-table'
+
+URL = 'https://github.com/emerge-ehri/sphinxcontrib-excel-table'
 DOWNLOAD_URL = '%s/archive/%s.tar.gz' % (URL, VERSION)
 FILES = ['README.rst', 'CHANGELOG.rst']
 KEYWORDS = [

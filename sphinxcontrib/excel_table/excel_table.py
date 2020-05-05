@@ -128,12 +128,21 @@ class ExcelTable(Directive):
 
         content = []
         for row in sheet_data:
-            _row = []
-            for cell in row:
-                _row.append(cell.value)
+            _row = {}
+            for i, cell in enumerate(row):
+                _row[i] = cell.value
             content.append(_row)
 
         data['content'] = _dumps(content)
+
+        columns = []
+        for i, cell in enumerate(sheet_data[0]):
+            _col = {}
+            _col["data"] = i
+            _col["renderer"] = "html"
+            columns.append(_col)
+
+        data['columns'] = _dumps(columns)
 
         cell_regex = re.compile(r'([A-Z]+){1}([0-9]+){1}')
         merged_cells = []
