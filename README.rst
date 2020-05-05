@@ -1,6 +1,8 @@
 sphinxcontrib-excel-table
 =========================
 
+.. warning:: This is a modified version forked from the original https://github.com/hackerain/sphinxcontrib-excel-table project. Very basic support for allowing html rendering in the table columns was added.
+
 The sphinxcontrib-excel-table extension is to render an excel file as an excel-alike table in Sphinx documentation.
 
 This contrib is inspired by sphinxcontrib-excel, which uses pyexcel and handsontable to do the
