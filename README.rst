@@ -1,18 +1,21 @@
-sphinxcontrib-excel-table
-=========================
+sphinxcontrib-excel-table-plus
+==============================
 
-.. warning:: This is a modified version forked from the original https://github.com/hackerain/sphinxcontrib-excel-table project. Very basic support for allowing html rendering in the table columns was added.
+.. warning::
 
-The sphinxcontrib-excel-table extension is to render an excel file as an excel-alike table in Sphinx documentation.
+    This is a modified version forked from the original https://github.com/emerge-ehri/sphinxcontrib-excel-table-plus project. Very basic support for allowing html rendering in the table columns was added. It was renamed so that it could be uploaded and available in PyPi.
+
+The sphinxcontrib-excel-table-plus extension is to render an excel file as an excel-alike table in Sphinx documentation.
 
 This contrib is inspired by sphinxcontrib-excel, which uses pyexcel and handsontable to do the
-work, but the sphinxcontrib-excel-table will instead use openpyxl and handsontable, mainly to
+work, but the sphinxcontrib-excel-table-plus will instead use openpyxl and handsontable, mainly to
 support the following features:
 
 * merged cell
 * display specific sheet
 * display specific section in one sheet
 * display specific rows in one sheet
+* (plus) added support to render html in columns
 
 Installation
 ------------
@@ -21,34 +24,34 @@ You can install it via pip:
 
 .. code-block:: bash
 
-    $ pip install sphinxcontrib-excel-table
+    $ pip install sphinxcontrib-excel-table-plus
 
 or install it from source code:
 
 .. code-block:: bash
 
-    $ git clone https://github.com/hackerain/sphinxcontrib-excel-table.git
-    $ cd sphinxcontrib-excel-table
+    $ git clone https://github.com/emerge-ehri/sphinxcontrib-excel-table-plus.git
+    $ cd sphinxcontrib-excel-table-plus
     $ python setup.py install
 
 Setup
 -----
 
-Add sphinxcontrib.excel_table to your conf.py file::
+Add sphinxcontrib.excel_table_plus to your conf.py file::
 
-    extensions = ['sphinxcontrib.excel_table']
+    extensions = ['sphinxcontrib.excel_table_plus']
 
 And you need to copy the resource files to your sphinx source directory, the resource files
 has been installed to your python system path if you install the package via pip, you can copy
 them from the installation path. You can get the installation path through::
 
-    python -c "import sphinxcontrib.excel_table; print sphinxcontrib.excel_table"
+    python -c "import sphinxcontrib.excel_table_plus; print sphinxcontrib.excel_table_plus"
 
 for example in Mac:
 
 .. code-block:: bash
 
-    $ INSTALLATION_PATH=/Library/Python/2.7/site-packages/sphinxcontrib/excel_table/
+    $ INSTALLATION_PATH=/Library/Python/2.7/site-packages/sphinxcontrib/excel_table_plus/
     $ cp $INSTALLATION_PATH/resources/_templates/layout.html path/to/your/project/_templates/
     $ cp $INSTALLATION_PATH/resources/_static/handsontable.full.min.js path/to/your/project/_static/
     $ cp $INSTALLATION_PATH/resources/_static/handsontable.full.min.css path/to/your/project/_static/
@@ -67,9 +70,9 @@ Here is the syntax to present your excel file in sphinx documentation:
 
 This will translate to:
 
-.. image:: https://raw.githubusercontent.com/hackerain/sphinxcontrib-excel-table/master/sphinx_excel_table.png
+.. image:: https://raw.githubusercontent.com/emerge-ehri/sphinxcontrib-excel-table-plus/master/sphinx_excel_table.png
 
-As you can see, it supports merged cells, and this is the mainly goal this contrib will achieve, because other sphinxcontrib excel extensions don't support this feature, and are not convenient to implement it. The sphinxcontrib-excel-table can do this easily using openpyxl library.
+As you can see, it supports merged cells, and this is the mainly goal this contrib will achieve, because other sphinxcontrib excel extensions don't support this feature, and are not convenient to implement it. The sphinxcontrib-excel-table-plus can do this easily using openpyxl library.
 
 Options
 -------
@@ -95,7 +98,7 @@ Specify the name of the sheet to dispaly, if not given, it will default to the f
        :file: path/to/file.xlsx
        :sheet: Sheet2
 
-Note this contrib can only display one sheet in one excel-table directive, but you can display different sheet in one excel in different directives.
+Note this contrib can only display one sheet in one excel-table-plus directive, but you can display different sheet in one excel in different directives.
 
 **rows (optional)**
 

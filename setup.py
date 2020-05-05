@@ -4,7 +4,7 @@ import sys
 PY2 = sys.version_info[0] == 2
 PY26 = PY2 and sys.version_info[1] < 7
 
-NAME = 'sphinxcontrib-excel-table'
+NAME = 'sphinxcontrib-excel-table-plus'
 AUTHOR = 'Larry Babb'
 VERSION = '1.0.8.1'
 EMAIL = 'larry.babb@gmail.com'
@@ -14,7 +14,7 @@ DESCRIPTION = (
     ''
 )
 
-URL = 'https://github.com/emerge-ehri/sphinxcontrib-excel-table'
+URL = 'https://github.com/emerge-ehri/sphinxcontrib-excel-table-plus'
 DOWNLOAD_URL = '%s/archive/%s.tar.gz' % (URL, VERSION)
 FILES = ['README.rst', 'CHANGELOG.rst']
 KEYWORDS = [

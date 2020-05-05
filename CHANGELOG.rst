@@ -42,3 +42,8 @@ Change log
 -----
 
 * Fix REAEME about table width usage
+
+1.0.8.1
+-------
+
+* Added html renderer to columns. based on fork from original sphinxcontrib-excel-table project.
