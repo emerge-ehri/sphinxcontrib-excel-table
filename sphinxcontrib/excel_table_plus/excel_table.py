@@ -2,14 +2,17 @@ import os
 import re
 import json
 import datetime
+from types import SimpleNamespace
 
 import docutils.core
 from docutils.parsers.rst import Directive
 from docutils.parsers.rst import directives
 
+from sphinx.util import logging
 from openpyxl import load_workbook
 from jinja2 import Environment, FileSystemLoader
 
+logger = logging.getLogger(__name__)
 
 def _get_resource_dir(folder):
     current_path = os.path.dirname(__file__)
@@ -33,6 +36,36 @@ def az_to_dec(s):
         j *= 26
 
     return n
+
+# f-stringify any string
+def fstr(template, **kwargs):
+    return eval(f"f'{template}'", kwargs)
+
+def processValue(row, col, cell, xforms):
+    cell_value = cell.value
+
+    if not cell_value or not xforms:
+        return cell_value
+
+    for xform in xforms:
+        matcher = xform["_matcher"]
+        if type(cell_value) == str and matcher.search(cell_value):
+            match = matcher.search(cell_value)
+            replacer = xform["replacer"]
+
+            if xform["type"] == "decoder":
+                for group_decoders in xform["group_decoders"]:
+                    grp_name = group_decoders["group"]
+                    decoders = group_decoders["decoders"]
+                    grp_val = match.group(grp_name)
+                    if decoders and grp_val and grp_val in decoders:
+                        decoder = SimpleNamespace(**decoders[grp_val])
+                        group = SimpleNamespace(**match.groupdict())
+                        replacer = fstr(replacer, group=group, decoder=decoder)
+
+            cell_value = matcher.sub(replacer, cell_value)
+
+    return cell_value
 
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -59,6 +92,7 @@ class ExcelTable(Directive):
         'colwidths': directives.unchanged,
         'row_header': directives.unchanged,
         'col_header': directives.unchanged,
+        'transforms': directives.path,
     }
 
     def run(self, icnt=[0]):
@@ -78,6 +112,7 @@ class ExcelTable(Directive):
         colwidths = self.options.get('colwidths', 'undefined')
         row_header = self.options.get('row_header', 'true')
         col_header = self.options.get('col_header', 'true')
+        transforms_path = self.options.get('transforms')
 
         if not file_path:
             msg = "file option is missing"
@@ -90,6 +125,16 @@ class ExcelTable(Directive):
         if rows and ':' not in rows:
             msg = "rows must contain a range seperated by :"
             return [document.reporter.warning(msg, line=self.lineno)]
+
+        transforms = []
+        if transforms_path:
+            relfn, json_mappings_file = env.relfn2path(transforms_path)
+            env.note_dependency(relfn)
+            f = open(json_mappings_file,)
+            transformations = json.load(f)
+            transforms = transformations["transforms"]
+            #logger.info("transformations="+str(type(transforms[0]))+"\n")
+
 
         relfn, excel_file = env.relfn2path(file_path)
         env.note_dependency(relfn)
@@ -126,11 +171,39 @@ class ExcelTable(Directive):
         else:
             sheet_data = sheet
 
+        # setup transform cell array based on rows and colums in sheet_data.
+        xforms = [[[None] * len(transforms)] * len(sheet_data[0])] * len(sheet_data)
+        if transforms:
+            # pre-compile all matcher and replace regexs
+            for t, transform in enumerate(transforms):
+                # logger.info( transform["matcher"])
+                if "matcher" not in transform:
+                    msg = "configured transformations must have a 'matcher' element."
+                    return [document.reporter.warning(msg, line=self.lineno)]
+                transform["_matcher"] = re.compile( transform["matcher"])
+                transform["_rows"] = []
+                if "rows" in transform:
+                    transform["_rows"] = [int(x) - 1 for x in transform["rows"].split(',') if x.strip().isdigit()]
+
+                transform["_cols"] = []
+                if "cols" in transform:
+                    transform["_cols"] = [int(x) - 1 for x in transform["cols"].split(',') if x.strip().isdigit()]
+
+                rows = range(len(sheet_data))
+                cols = range(len(sheet_data[0]))
+                if transform["_rows"]:
+                    rows = transform["_rows"]
+                if transform["_cols"]:
+                    cols = transform["_cols"]
+                for r in rows:
+                    for c in cols:
+                        xforms[r][c][t] = transform
+
         content = []
-        for row in sheet_data:
+        for rownum, row in enumerate(sheet_data):
             _row = {}
-            for i, cell in enumerate(row):
-                _row[i] = cell.value
+            for colnum, cell in enumerate(row):
+                _row[colnum] = processValue(rownum, colnum, cell, xforms[rownum][colnum])
             content.append(_row)
 
         data['content'] = _dumps(content)
