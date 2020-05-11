@@ -6,12 +6,11 @@ PY26 = PY2 and sys.version_info[1] < 7
 
 NAME = 'sphinxcontrib-excel-table-plus'
 AUTHOR = 'Larry Babb'
-VERSION = '1.0.8.1'
+VERSION = '1.0.8.2'
 EMAIL = 'larry.babb@gmail.com'
 LICENSE = 'Apache License'
 DESCRIPTION = (
-    'Embed excel file as an excel-alike table into sphinx documentation.* Forked with extended support for html in columns.' +
-    ''
+    'Embed excel file as an excel-alike table into sphinx documentation. Forked with extended support for html in columns.' 
 )
 
 URL = 'https://github.com/emerge-ehri/sphinxcontrib-excel-table-plus'

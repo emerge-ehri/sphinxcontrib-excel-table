@@ -1,10 +1,6 @@
 sphinxcontrib-excel-table-plus
 ==============================
 
-.. warning::
-
-    This is a modified version forked from the original https://github.com/emerge-ehri/sphinxcontrib-excel-table-plus project. Very basic support for allowing html rendering in the table columns was added. It was renamed so that it could be uploaded and available in PyPi.
-
 The sphinxcontrib-excel-table-plus extension is to render an excel file as an excel-alike table in Sphinx documentation.
 
 This contrib is inspired by sphinxcontrib-excel, which uses pyexcel and handsontable to do the
@@ -92,25 +88,27 @@ Relative path (based on document) to excel documentation. Note that as openpyxl 
 
 Relative path (based on document) to a json file that contains configuration for transforming cell values in the table using regular expressions. There are two "type"s of transformations that can be configured, both types will use a regex search to find all "matcher"s and substitute them with the corresponding "replacer"s. The type="decoder" version will additionally replace named group portions with decoded values (see below for how to configure). The schema for the json and the meaning is as follows:
 
-{
-    "transforms" : array of transforms with the following structure
-        {   "type"    : (required) string enumeration (allowed values "substitution" or "decoder")
-            "rows"    : (optional) csv string of row numbers to apply this transform, if blank or missing then all rows (e.g. "1", "1, 3, 4")
-            "cols"    : (optional) csv string of column numbers to apply this transform, if blank or missing then all columns (e.g. "1", "1, 3, 4")
-            "matcher" : (required) python regular expression to match and identify groupings to transform in "replacer" attribute (e.g. "(?P<label>Required|Fixed|Optional): ")
-            "replacer": (required for type=substitution) python regular expression that replaces the matcher expression (e.g. for substitution "<b>\\1:</b>, for decoder "<a href=\\'{decoder.href}\\'>\\1</a>)" ")
-            "group_decoders" : (required for type=decoder) array [] of the following sub-structure...
-                {   "group"    : (required) the regex grouper name from the "matcher" regex (e.g.  "label")
-                    "decoders" : (required) a structure that maps to a python dictionary of key : object pairs
-                        (e.g.
-                            key        : object of attribute : value pairs for substituting with the {decoder.attribute} replacements in the "replacer" string before final substitutions              :
-                            "Required" : {"href":"val1", "attrib2":"otherval1"},
-                            "Fixed"    : {"href":"val2", "attrib2":"otherval2"},
-                            "Optional" : {"href":"val3", "attrib2":"otherval3"}
-                        )
-                }
-        }
-}
+.. code-block:: JSON
+
+    {
+        "transforms" : array of transforms with the following structure
+            {   "type"    : (required) string enumeration (allowed values "substitution" or "decoder")
+                "rows"    : (optional) csv string of row numbers to apply this transform, if blank or missing then all rows (e.g. "1", "1, 3, 4")
+                "cols"    : (optional) csv string of column numbers to apply this transform, if blank or missing then all columns (e.g. "1", "1, 3, 4")
+                "matcher" : (required) python regular expression to match and identify groupings to transform in "replacer" attribute (e.g. "(?P<label>Required|Fixed|Optional): ")
+                "replacer": (required for type=substitution) python regular expression that replaces the matcher expression (e.g. for substitution "<b>\\1:</b>, for decoder "<a href=\\'{decoder.href}\\'>\\1</a>)" ")
+                "group_decoders" : (required for type=decoder) array [] of the following sub-structure...
+                    {   "group"    : (required) the regex grouper name from the "matcher" regex (e.g.  "label")
+                        "decoders" : (required) a structure that maps to a python dictionary of key : object pairs
+                            (e.g.
+                                key        : object of attribute : value pairs for substituting with the {decoder.attribute} replacements in the "replacer" string before final substitutions              :
+                                "Required" : {"href":"val1", "attrib2":"otherval1"},
+                                "Fixed"    : {"href":"val2", "attrib2":"otherval2"},
+                                "Optional" : {"href":"val3", "attrib2":"otherval3"}
+                            )
+                    }
+            }
+    }
 
 .. code-block::
 
